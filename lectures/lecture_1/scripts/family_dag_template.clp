@@ -27,10 +27,46 @@
   (multislot children
 	(type STRING)))
 
+(deftemplate mother
+  (slot name
+	(type STRING))
+  (multislot children
+	(type STRING)))
+
+(deftemplate parent
+  (slot name
+	(type STRING))
+  (multislot children
+	(type STRING)))
+
+(deftemplate brother
+  (slot name
+	(type STRING))
+  (multislot siblings
+	(type STRING)))
+
+
+
 (defrule is-father
   "asserting fatherhood"
   (person (name ?father) (gender male) (children $?children))
   =>
   (assert (father (name ?father) (children $?children))))
+
+(defrule is-mother
+  "asserting motherhood"
+  (person (name ?mother) (gender female) (children $?children))
+  =>
+  (assert (mother (name ?mother) (children $?children))))
+
+(defrule is-parent
+  "asserting parenthood"
+  (or
+  (mother (name ?parent)(children $?children))
+  (father (name ?parent)(children $?children)))
+  =>
+  (assert (parent (name ?parent) (children $?children))))
+
+
 
 ;;; more rules...
