@@ -44,9 +44,9 @@
 ; 	    (four 4) (five 2) (six 6)
 ; 	    (seven 7) (eight 5) (nine 8)))
 (deffacts initial-board
-  (8-puzzle (one 1) (two 2) (three 3)
-	    (four 4) (five -1) (six 6)
-	    (seven 7) (eight 5) (nine 8)))
+  (8-puzzle (one 4) (two 8) (three 1)
+	    (four 5) (five -1) (six 2)
+	    (seven 3) (eight 9) (nine 6)))
 
 ;; Routines for question-driven interaction
 ;; Modified from Riley's& Giarratano's
