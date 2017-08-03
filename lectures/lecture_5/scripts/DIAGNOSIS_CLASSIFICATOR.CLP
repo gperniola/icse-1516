@@ -25,7 +25,8 @@
    (slot value))
 
 (deftemplate BC::goal 
-   (slot attribute))
+    (slot attribute)
+    (slot final (default false)))
 
 (defrule BC::attempt-rule
   (declare (salience 500))
@@ -38,7 +39,7 @@
    (assert (goal (attribute ?a-name))))
 
 (defrule BC::ask-attribute-value
-  (declare (salience 20))
+  (declare (salience 50))
    ?goal <- (goal (attribute ?g-name))
    (not (attribute (name ?g-name)))
    (not (rule (then ?g-name $?)))
@@ -50,10 +51,18 @@
 
 (defrule BC::goal-satisfied
    (declare (salience 200))
-   ?goal <- (goal (attribute ?g-name))
+   ?goal <- (goal (attribute ?g-name) (final false))
    (attribute (name ?g-name))
    =>
    (retract ?goal))
+
+(defrule BC::final-goal-satisfied
+   (declare (salience 500))
+   ?goal <- (goal (attribute ?g-name) (final true))
+   (attribute (name ?g-name) (value ?g-value))
+   =>
+   (printout t "CONCLUSION: The value of " ?g-name " is " ?g-value crlf)
+   (halt))
 
 (defrule BC::rule-satisfied
    (declare (salience 200))
@@ -80,7 +89,7 @@
                       (value ?g-value))))
 
 (defrule BC::remove-rule-no-match
-   (declare (salience 100))
+   (declare (salience 200))
    (goal (attribute ?g-name))
    (attribute (name ?a-name) (value ?a-value))
    ?rule <- (rule (if ?a-name is ~?a-value) 
@@ -89,7 +98,7 @@
    (retract ?rule))
 
 (defrule BC::modify-rule-match
-   (declare (salience 100))
+   (declare (salience 200))
    (goal (attribute ?g-name))
    (attribute (name ?a-name) (value ?a-value))
    ?rule <- (rule (if ?a-name is ?a-value and 
@@ -143,7 +152,7 @@
 
 
 (deffacts MAIN::initial-goal
-   (goal (attribute diagnosis)))
+   (goal (attribute diagnosis) (final true)))
 
 (defrule MAIN::start-BC
    =>
